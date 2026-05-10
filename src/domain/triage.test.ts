@@ -36,4 +36,24 @@ describe("triageTicket", () => {
       "Do not paste suspicious links into public tools."
     );
   });
+
+  it("personalizes the user response when the requester is known", () => {
+    const recommendation = triageTicket(sampleTickets[0]);
+
+    expect(recommendation.userResponseDraft).toContain("Hi Jordan");
+    expect(recommendation.userResponseDraft).toContain("office.com");
+  });
+
+  it("falls back to a safe default category for unmatched request text", () => {
+    const recommendation = triageTicket({
+      ...sampleTickets[0],
+      id: "TZ-INC-2026-0099",
+      title: "General help request",
+      description: "I need help with something on my computer."
+    });
+
+    expect(recommendation.categoryName).toBe("Microsoft 365 / Authentication");
+    expect(recommendation.confidence).toBe(63);
+    expect(recommendation.requiresHumanApproval).toBe(true);
+  });
 });
