@@ -8,6 +8,8 @@ The public demo is designed to run as a static web app with fictional sample dat
 
 > Live demo link coming after GitHub Pages is enabled for the repository.
 
+![TierZero dashboard showing ticket triage, user context, knowledge-base recommendations, audit timeline, and approval gate](docs/screenshots/tierzero-dashboard.png)
+
 ## Tech Stack
 
 | Technology | Why it was chosen |
@@ -87,6 +89,16 @@ TierZero is designed to show safe IT operations:
 | Make the demo feel like real IT work without exposing real systems | Split the project into a static public demo and a later private homelab proof layer |
 | Show AI assistance without implying unsafe automation | Use deterministic recommendations, explicit safety notes, approval gates, and audit events |
 | Keep the project manageable for an entry-level portfolio | Build GLPI, n8n, and Ollama as future adapter targets instead of MVP dependencies |
+
+## Project Timeline
+
+TierZero is organized as a phased portfolio build:
+
+1. **Architecture and safety model:** define the public demo, private homelab boundary, data model, and approval-first operating model.
+2. **Demo foundation:** build the React/Vite app, mock ITSM data, triage logic, and operations-console layout.
+3. **Workflow credibility:** add scenario switching, user and asset context, KB recommendations, audit events, and approval states.
+4. **Portfolio presentation:** add README polish, deployment workflow, public runbooks, demo script, screenshot, and regression tests.
+5. **Future homelab proof:** connect GLPI and n8n locally behind adapters after the public demo is live.
 
 ## Architecture
 
