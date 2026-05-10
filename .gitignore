@@ -1,5 +1,6 @@
 node_modules/
 .vite/
+.playwright-mcp/
 dist/
 coverage/
 *.tsbuildinfo
