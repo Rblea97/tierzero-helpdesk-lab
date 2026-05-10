@@ -73,4 +73,4 @@ Windows Server, Active Directory, and Microsoft 365/Entra integration are option
 
 ## License
 
-License will be selected before the first public release.
+MIT License. See [LICENSE](LICENSE).
