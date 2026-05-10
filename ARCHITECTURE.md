@@ -11,7 +11,7 @@ This split keeps the public portfolio demo easy to review while preserving a cre
 
 ## Public Demo Layer
 
-The public demo is the first deliverable. It will run as a static React/Vite app and use deterministic mock data.
+The public demo is the first deliverable. It runs as a static React/Vite app and uses deterministic mock data.
 
 ```text
 Ticket Intake
@@ -90,6 +90,12 @@ AuditAdapter
 ```
 
 Initial adapters will use mock data. Later adapters can connect to GLPI, n8n, and local-only model tooling.
+
+## Public Documentation Boundary
+
+Only public-facing project material belongs in the repository: README content, architecture notes, fictional sample data, public runbooks, demo scripts, source code, tests, and deployment configuration.
+
+Private planning notes, saved context checkpoints, generated concept images, local QA artifacts, secrets, `.env` files, and homelab credentials must stay out of git.
 
 ## Safety Principles
 

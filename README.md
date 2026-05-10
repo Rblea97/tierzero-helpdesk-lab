@@ -4,9 +4,23 @@ TierZero is a realistic help desk operations lab that shows how Tier 1 support t
 
 ## Live Demo
 
-The public demo will be a static web app with fictional sample data and simulated recommendations. It will not require login, expose API keys, or connect to real user accounts.
+The public demo is designed to run as a static web app with fictional sample data and deterministic recommendations. It does not require login, expose API keys, or connect to real user accounts.
 
-## What This Demonstrates
+> Live demo link coming after GitHub Pages is enabled for the repository.
+
+![TierZero dashboard showing ticket triage, user context, knowledge-base recommendations, audit timeline, and approval gate](docs/screenshots/tierzero-dashboard.png)
+
+## Tech Stack
+
+| Technology | Why it was chosen |
+| --- | --- |
+| React + Vite + TypeScript | Fast static demo with clear component boundaries and type-safe domain logic |
+| Tailwind CSS | Compact operations-console styling without a heavy UI framework |
+| Vitest + ESLint | Repeatable checks for triage behavior and code quality |
+| Static fictional data | Safe public demo with no secrets, credentials, or real users |
+| GitHub Pages | Free static hosting that fits a recruiter-friendly portfolio demo |
+
+## Key Features
 
 - Intake and triage for realistic IT support tickets
 - User, department, and device context linked to each ticket
@@ -15,32 +29,46 @@ The public demo will be a static web app with fictional sample data and simulate
 - Internal notes, user-facing response drafts, and escalation summaries
 - Audit timeline for ticket events, recommendations, approvals, and escalations
 
-## Planned Stack
+## Quick Start
 
-- **React + Vite + TypeScript:** fast static public demo with clean component boundaries
-- **Tailwind CSS:** consistent, responsive interface without heavy UI dependencies
-- **Static mock data:** safe recruiter-facing demo with no secrets or production systems
-- **GLPI:** planned homelab ITSM platform for tickets, assets, users, and knowledge base
-- **n8n:** planned visual workflow automation for approval and triage flows
-- **Ollama:** optional local-only model runtime for private lab experiments
+```powershell
+pnpm install
+pnpm dev
+```
 
-## MVP Scope
+Run the validation checks:
 
-The first version will include:
+```powershell
+pnpm typecheck
+pnpm test
+pnpm lint
+pnpm build
+```
 
-- Public dashboard
-- Sample ticket intake
+Preview the production build locally:
+
+```powershell
+pnpm build
+pnpm preview
+```
+
+## Demo Workflow
+
+The main workflow starts with a sample ticket such as:
+
+> "My Outlook keeps asking for MFA and then says my password is incorrect."
+
+TierZero then shows:
+
 - Category, priority, and confidence output
-- Linked fictional user and asset records
-- Knowledge-base recommendation
-- Tier 1 checklist
-- User response draft
+- Linked fictional user, department, and asset record
+- Recommended knowledge-base article
+- Tier 1 troubleshooting checklist
+- User-facing response draft
 - Internal technician notes
-- Escalation summary
-- Safety note
+- Tier 2 escalation summary
 - Human approval gate
 - Audit timeline
-- Architecture page explaining how the demo maps to real tools
 
 ## Safety Model
 
@@ -53,6 +81,30 @@ TierZero is designed to show safe IT operations:
 - Simulated public recommendations for reliability and privacy
 - Human approval required before sensitive actions
 - Audit events for all important workflow decisions
+
+## Challenges and Solutions
+
+| Challenge | Solution |
+| --- | --- |
+| Make the demo feel like real IT work without exposing real systems | Split the project into a static public demo and a later private homelab proof layer |
+| Show AI assistance without implying unsafe automation | Use deterministic recommendations, explicit safety notes, approval gates, and audit events |
+| Keep the project manageable for an entry-level portfolio | Build GLPI, n8n, and Ollama as future adapter targets instead of MVP dependencies |
+
+## Project Timeline
+
+TierZero is organized as a phased portfolio build:
+
+1. **Architecture and safety model:** define the public demo, private homelab boundary, data model, and approval-first operating model.
+2. **Demo foundation:** build the React/Vite app, mock ITSM data, triage logic, and operations-console layout.
+3. **Workflow credibility:** add scenario switching, user and asset context, KB recommendations, audit events, and approval states.
+4. **Portfolio presentation:** add README polish, deployment workflow, public runbooks, demo script, screenshot, and regression tests.
+5. **Future homelab proof:** connect GLPI and n8n locally behind adapters after the public demo is live.
+
+## Architecture
+
+TierZero uses a two-layer architecture: a static public demo for safe portfolio review and a future homelab proof layer for real-tool integrations. The app keeps triage, mock data, workflow events, and future integrations separated so the public demo can later map to GLPI, n8n, and local-only model tooling without rewriting the UI.
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the full architecture notes.
 
 ## Real-Tool Roadmap
 
@@ -70,7 +122,19 @@ Windows Server, Active Directory, and Microsoft 365/Entra integration are option
 
 - [Architecture](ARCHITECTURE.md)
 - [Implementation Plan](docs/IMPLEMENTATION_PLAN.md)
+- [Demo Script](docs/DEMO_SCRIPT.md)
+- [Runbook Template](docs/RUNBOOK_TEMPLATE.md)
+- Sample KB articles:
+  - [Microsoft 365 Sign-in and MFA Troubleshooting](docs/kb/m365-sign-in-mfa.md)
+  - [Printer Offline Troubleshooting](docs/kb/printer-offline.md)
+  - [Phishing Report Handling](docs/kb/phishing-report.md)
+
+## Deployment
+
+GitHub Actions validates pull requests with typecheck, tests, linting, and a production build. Pushes to `main` deploy the Vite `dist` output to GitHub Pages.
+
+For a repository Pages URL such as `https://USERNAME.github.io/REPO/`, the Vite base path is set automatically in GitHub Actions. For a custom domain, set `VITE_BASE_PATH=/` in the deployment environment.
 
 ## License
 
-License will be selected before the first public release.
+MIT License. See [LICENSE](LICENSE).
