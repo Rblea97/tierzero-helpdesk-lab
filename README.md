@@ -6,7 +6,7 @@ TierZero is a realistic help desk operations lab that shows how Tier 1 support t
 
 The public demo is designed to run as a static web app with fictional sample data and deterministic recommendations. It does not require login, expose API keys, or connect to real user accounts.
 
-> Live demo link coming after GitHub Pages is enabled for the repository.
+> Live demo: [rblea97.github.io/tierzero-helpdesk-lab](https://rblea97.github.io/tierzero-helpdesk-lab/)
 
 ![TierZero dashboard showing ticket triage, user context, knowledge-base recommendations, audit timeline, and approval gate](docs/screenshots/tierzero-dashboard.png)
 
