@@ -38,6 +38,8 @@ Build the public portfolio demo first, then add the real-tool homelab path after
 - Add screenshots and a short demo script.
 - Update README with live demo link, setup steps, and project explanation.
 - Add a "Challenges and Solutions" section after implementation decisions are known.
+- Add GitHub Pages deployment workflow.
+- Add public sample runbooks that match the demo scenarios.
 
 ## Phase 5: Homelab Proof Path
 
