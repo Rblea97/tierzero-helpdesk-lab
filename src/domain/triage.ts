@@ -10,7 +10,7 @@ import type {
   Ticket
 } from "./types";
 
-const FALLBACK_CONFIDENCE = 62;
+const FALLBACK_CONFIDENCE = 63;
 
 export function triageTicket(ticket: Ticket): Recommendation {
   const category = findBestCategory(ticket);

@@ -8,7 +8,7 @@ describe("triageTicket", () => {
 
     expect(recommendation.categoryName).toBe("Microsoft 365 / Authentication");
     expect(recommendation.priority).toBe("medium");
-    expect(recommendation.confidence).toBe(86);
+    expect(recommendation.confidence).toBe(87);
     expect(recommendation.recommendedKbArticleIds).toEqual([
       "kb-m365-mfa-signin"
     ]);
