@@ -40,4 +40,23 @@ describe("buildTimeline", () => {
       true
     );
   });
+
+  it("includes generated technician action events after base workflow events", () => {
+    const timeline = buildTimeline(sampleTickets[0], "pending", [
+      {
+        id: "audit-extra",
+        ticketId: sampleTickets[0].id,
+        actorType: "technician",
+        actorName: "Avery Stone",
+        eventType: "status_changed",
+        message: "Status changed to In Progress.",
+        timestamp: "2026-05-11T16:30:00.000Z"
+      }
+    ]);
+
+    expect(timeline[timeline.length - 1]).toMatchObject({
+      id: "audit-extra",
+      eventType: "status_changed"
+    });
+  });
 });

@@ -6,7 +6,8 @@ export type NoteTab = "notes" | "escalation";
 
 export function buildTimeline(
   ticket: Ticket,
-  approvalState: ApprovalState
+  approvalState: ApprovalState,
+  actionEvents: AuditEvent[] = []
 ): AuditEvent[] {
   const baseEvents = auditEvents.filter((event) => event.ticketId === ticket.id);
   const generatedEvents: AuditEvent[] = [
@@ -35,5 +36,7 @@ export function buildTimeline(
     }
   ];
 
-  return [...baseEvents, ...generatedEvents];
+  return [...baseEvents, ...generatedEvents, ...actionEvents].filter(
+    (event) => event.ticketId === ticket.id
+  );
 }
