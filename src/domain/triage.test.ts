@@ -55,6 +55,72 @@ describe("triageTicket", () => {
     );
   });
 
+  it("prefers VPN remote access when the report also mentions sign-in", () => {
+    const recommendation = triageTicket({
+      ...sampleTickets[0],
+      id: "TZ-INC-2026-0100",
+      title: "VPN will not connect before shift handoff",
+      description:
+        "The VPN client fails with an authentication error. The user can sign in to Microsoft 365, but cannot reach the shared drive needed for a 2 PM finance deadline."
+    });
+
+    expect(recommendation.categoryName).toBe("VPN / Remote Access");
+    expect(recommendation.recommendedKbArticleIds).toEqual([
+      "kb-vpn-remote-access"
+    ]);
+    expect(recommendation.userResponseDraft).toContain("VPN connection issue");
+    expect(recommendation.safetyFlags).toContain(
+      "Do not bypass MFA or conditional access controls."
+    );
+  });
+
+  it("prefers phishing when a suspicious link asks the user to sign in", () => {
+    const recommendation = triageTicket({
+      ...sampleTickets[2],
+      id: "TZ-INC-2026-0101",
+      title: "Suspicious payroll link asks me to sign in",
+      description:
+        "I received a suspicious payroll email with a link asking me to login and confirm my password."
+    });
+
+    expect(recommendation.categoryName).toBe("Security / Phishing Report");
+    expect(recommendation.priority).toBe("high");
+    expect(recommendation.recommendedKbArticleIds).toEqual([
+      "kb-phishing-report"
+    ]);
+  });
+
+  it("prefers printing when printer-specific terms overlap with login wording", () => {
+    const recommendation = triageTicket({
+      ...sampleTickets[1],
+      id: "TZ-INC-2026-0102",
+      title: "Printer offline and showing login prompt",
+      description:
+        "The shared finance printer says offline after showing a login prompt on the display."
+    });
+
+    expect(recommendation.categoryName).toBe("Printing");
+    expect(recommendation.recommendedKbArticleIds).toEqual([
+      "kb-printer-offline"
+    ]);
+  });
+
+  it("classifies new hire access requests as onboarding service requests", () => {
+    const recommendation = triageTicket({
+      ...sampleTickets[0],
+      id: "TZ-SR-2026-0103",
+      title: "New hire laptop and access needed",
+      description:
+        "A new hire starts tomorrow and needs a laptop, VPN, payroll software access, and Microsoft 365 groups."
+    });
+
+    expect(recommendation.categoryName).toBe("New User Onboarding");
+    expect(recommendation.recommendedKbArticleIds).toEqual([
+      "kb-new-user-onboarding"
+    ]);
+    expect(recommendation.userResponseDraft).toContain("new hire");
+  });
+
   it("personalizes the user response when the requester is known", () => {
     const recommendation = triageTicket(sampleTickets[0]);
 
