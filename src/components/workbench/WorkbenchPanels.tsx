@@ -35,11 +35,13 @@ export function SecondaryWorkbenchPanels({
   activeTab,
   onTabChange,
   recommendation,
+  savedNotes,
   timeline
 }: {
   activeTab: NoteTab;
   onTabChange: (tab: NoteTab) => void;
   recommendation: Recommendation;
+  savedNotes: string[];
   timeline: AuditEvent[];
 }) {
   return (
@@ -50,6 +52,7 @@ export function SecondaryWorkbenchPanels({
         escalationSummary={recommendation.escalationSummary}
         internalNotes={recommendation.internalTechnicianNotes}
         onTabChange={onTabChange}
+        savedNotes={savedNotes}
       />
       <div className="flex flex-col gap-3">
         <ChecklistPanel steps={recommendation.tierOneChecklist} />
@@ -260,13 +263,17 @@ function NotesPanel({
   activeTab,
   escalationSummary,
   internalNotes,
-  onTabChange
+  onTabChange,
+  savedNotes
 }: {
   activeTab: NoteTab;
   escalationSummary: string;
   internalNotes: string;
   onTabChange: (tab: NoteTab) => void;
+  savedNotes: string[];
 }) {
+  const hasSavedNotes = savedNotes.length > 0;
+
   return (
     <Panel title="Technician Workspace">
       <div className="flex border-b border-slate-200">
@@ -282,15 +289,29 @@ function NotesPanel({
         />
       </div>
       <div className="mt-4 min-h-28 rounded-md border border-slate-300 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
-        {activeTab === "notes" ? internalNotes : escalationSummary}
+        {activeTab === "notes" ? (
+          <div className="space-y-3">
+            {hasSavedNotes ? (
+              <div className="space-y-2">
+                {savedNotes.map((note, index) => (
+                  <p
+                    className="rounded-md border border-slate-200 bg-white p-3"
+                    key={`${note}-${index}`}
+                  >
+                    {note}
+                  </p>
+                ))}
+              </div>
+            ) : null}
+            <p>{internalNotes}</p>
+          </div>
+        ) : (
+          escalationSummary
+        )}
       </div>
-      <p className="mt-4 text-xs text-slate-500">Last saved: 02:12 PM</p>
-      <button
-        className="mt-3 h-10 rounded-md border border-cyan-600 px-4 text-sm font-semibold text-cyan-700 hover:bg-cyan-50"
-        type="button"
-      >
-        Save Notes
-      </button>
+      <p className="mt-4 text-xs text-slate-500">
+        {hasSavedNotes ? `${savedNotes.length} saved note(s)` : "No saved notes"}
+      </p>
     </Panel>
   );
 }

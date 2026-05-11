@@ -8,8 +8,10 @@ import {
 } from "./components/workbench/WorkbenchPanels";
 import { TicketIntake } from "./components/workbench/TicketIntake";
 import { TicketQueue } from "./components/workbench/TicketQueue";
+import { TechnicianActions } from "./components/workbench/TechnicianActions";
 import { TriageHeader } from "./components/workbench/TriageHeader";
 import { sampleTickets } from "./data/mockData";
+import { applyTechnicianAction } from "./domain/actions";
 import { getQueueMetrics, getVisibleTickets } from "./domain/queue";
 import {
   createTicketFromIntake,
@@ -17,7 +19,9 @@ import {
 } from "./domain/tickets";
 import { triageTicket } from "./domain/triage";
 import type {
+  AuditEvent,
   QueueFilter,
+  TechnicianActionType,
   Ticket,
   TicketIntake as TicketIntakeModel
 } from "./domain/types";
@@ -34,6 +38,12 @@ export function App() {
   const [approvalState, setApprovalState] =
     useState<ApprovalState>("pending");
   const [activeNoteTab, setActiveNoteTab] = useState<NoteTab>("notes");
+  const [actionEventsByTicket, setActionEventsByTicket] = useState<
+    Record<string, AuditEvent[]>
+  >({});
+  const [notesByTicket, setNotesByTicket] = useState<Record<string, string[]>>(
+    {}
+  );
 
   const ticket = tickets.find(
     (candidate) => candidate.id === selectedTicketId
@@ -44,7 +54,11 @@ export function App() {
     [tickets, queueFilter]
   );
   const recommendation = useMemo(() => triageTicket(ticket), [ticket]);
-  const timeline = buildTimeline(ticket, approvalState);
+  const timeline = buildTimeline(
+    ticket,
+    approvalState,
+    actionEventsByTicket[ticket.id] ?? []
+  );
 
   function handleTicketChange(ticketId: string) {
     setSelectedTicketId(ticketId);
@@ -73,6 +87,33 @@ export function App() {
     return true;
   }
 
+  function recordAction(actionType: TechnicianActionType, note?: string) {
+    const result = applyTechnicianAction(ticket, {
+      type: actionType,
+      note,
+      actorName: "Avery Stone",
+      timestamp: new Date().toISOString()
+    });
+
+    setTickets((current) =>
+      current.map((candidate) =>
+        candidate.id === result.ticket.id ? result.ticket : candidate
+      )
+    );
+    setActionEventsByTicket((current) => ({
+      ...current,
+      [ticket.id]: [...(current[ticket.id] ?? []), result.auditEvent]
+    }));
+  }
+
+  function handleSaveNote(note: string) {
+    setNotesByTicket((current) => ({
+      ...current,
+      [ticket.id]: [...(current[ticket.id] ?? []), note]
+    }));
+    recordAction("save_note", note);
+  }
+
   return (
     <AppShell>
       <MetricStrip metrics={metrics} />
@@ -89,16 +130,28 @@ export function App() {
         recommendation={recommendation}
         ticket={ticket}
       />
+      <TechnicianActions
+        onAction={recordAction}
+        onSaveNote={handleSaveNote}
+        ticket={ticket}
+      />
       <SecondaryWorkbenchPanels
         activeTab={activeNoteTab}
         onTabChange={setActiveNoteTab}
         recommendation={recommendation}
+        savedNotes={notesByTicket[ticket.id] ?? []}
         timeline={timeline}
       />
       <ApprovalGate
         approvalState={approvalState}
-        onApprove={() => setApprovalState("approved")}
-        onReject={() => setApprovalState("rejected")}
+        onApprove={() => {
+          setApprovalState("approved");
+          recordAction("approve_recommendation");
+        }}
+        onReject={() => {
+          setApprovalState("rejected");
+          recordAction("reject_recommendation");
+        }}
       />
     </AppShell>
   );

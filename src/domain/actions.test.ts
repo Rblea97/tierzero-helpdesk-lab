@@ -37,6 +37,24 @@ describe("technician actions", () => {
     });
   });
 
+  it("records approval decisions without changing queue status", () => {
+    const approved = applyTechnicianAction(sampleTickets[0], {
+      type: "approve_recommendation",
+      actorName: "Avery Stone",
+      timestamp
+    });
+    const rejected = applyTechnicianAction(sampleTickets[0], {
+      type: "reject_recommendation",
+      actorName: "Avery Stone",
+      timestamp
+    });
+
+    expect(approved.ticket.status).toBe(sampleTickets[0].status);
+    expect(approved.auditEvent.eventType).toBe("technician_approved");
+    expect(rejected.ticket.status).toBe(sampleTickets[0].status);
+    expect(rejected.auditEvent.eventType).toBe("technician_rejected");
+  });
+
   it("escalates and closes tickets with specific audit events", () => {
     const escalated = applyTechnicianAction(sampleTickets[2], {
       type: "escalate",

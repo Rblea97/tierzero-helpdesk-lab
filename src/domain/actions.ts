@@ -43,12 +43,11 @@ function getNextStatus(
     return "pending_user";
   }
 
-  if (actionType === "approve_recommendation") {
-    return "pending_approval";
-  }
-
-  if (actionType === "reject_recommendation") {
-    return "in_progress";
+  if (
+    actionType === "approve_recommendation" ||
+    actionType === "reject_recommendation"
+  ) {
+    return currentStatus;
   }
 
   if (actionType === "escalate") {
