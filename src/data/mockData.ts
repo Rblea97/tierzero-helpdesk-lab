@@ -258,6 +258,37 @@ export const knowledgeBaseArticles: KnowledgeBaseArticle[] = [
       "Multiple recipients affected"
     ],
     safetyNotes: ["Do not paste suspicious links into public tools."]
+  },
+  {
+    id: "kb-new-user-onboarding",
+    title: "New user onboarding access checklist",
+    categoryId: "cat-onboarding",
+    symptoms: [
+      "New hire needs equipment, software, or group access.",
+      "Manager or HR requests onboarding before the employee start date.",
+      "Access may include Microsoft 365 groups, VPN, printer, or line-of-business apps."
+    ],
+    tierOneSteps: [
+      "Confirm the new hire name, department, manager, and start date.",
+      "Verify manager or HR approval is attached to the request.",
+      "Confirm required hardware, software, distribution groups, and access roles.",
+      "Check whether the asset is assigned or needs imaging before handoff.",
+      "Escalate if approvals are missing or the start date is within one business day."
+    ],
+    userResponseTemplate:
+      "Hi Jordan, I can help with the new hire onboarding request. Please confirm the start date, manager approval, required software, and access groups before provisioning begins.",
+    internalNotesTemplate:
+      "New user onboarding request. Confirm manager or HR approval, start date, hardware assignment, required software, distribution groups, and access roles before fulfillment.",
+    escalationCriteria: [
+      "Missing manager or HR approval",
+      "Start date within one business day",
+      "Privileged access requested",
+      "Hardware imaging or inventory exception required"
+    ],
+    safetyNotes: [
+      "Do not provision access without documented manager or HR approval.",
+      "Do not grant privileged access from a general onboarding ticket."
+    ]
   }
 ];
 

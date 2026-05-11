@@ -12,6 +12,49 @@ import type {
 
 const FALLBACK_CONFIDENCE = 63;
 
+interface CategoryScore {
+  category: Category;
+  matchedKeywords: number;
+  score: number;
+  specificity: number;
+}
+
+const CATEGORY_SPECIFICITY: Record<string, number> = {
+  "cat-security-phishing": 50,
+  "cat-onboarding": 45,
+  "cat-vpn": 40,
+  "cat-printing": 35,
+  "cat-m365-auth": 20
+};
+
+const KEYWORD_WEIGHTS: Record<string, number> = {
+  phishing: 12,
+  suspicious: 10,
+  attachment: 8,
+  link: 7,
+  "new hire": 12,
+  onboarding: 12,
+  laptop: 4,
+  access: 4,
+  software: 4,
+  vpn: 12,
+  tunnel: 10,
+  remote: 8,
+  connection: 6,
+  wifi: 5,
+  printer: 12,
+  print: 8,
+  offline: 8,
+  toner: 7,
+  paper: 7,
+  outlook: 10,
+  mfa: 8,
+  password: 5,
+  office: 5,
+  "sign in": 3,
+  login: 3
+};
+
 export function triageTicket(ticket: Ticket): Recommendation {
   const category = findBestCategory(ticket);
   const article = findBestArticle(category);
@@ -41,23 +84,39 @@ export function triageTicket(ticket: Ticket): Recommendation {
 }
 
 function findBestCategory(ticket: Ticket): Category {
-  const text = normalize(`${ticket.title} ${ticket.description}`);
-  const scoredCategories = categories.map((category) => ({
-    category,
-    score: category.keywords.filter((keyword) =>
-      text.includes(normalize(keyword))
-    ).length
-  }));
-
-  const bestMatch = scoredCategories.sort((left, right) => {
+  const bestMatch = scoreCategories(ticket).sort((left, right) => {
     if (right.score !== left.score) {
       return right.score - left.score;
+    }
+
+    if (right.specificity !== left.specificity) {
+      return right.specificity - left.specificity;
     }
 
     return left.category.name.localeCompare(right.category.name);
   })[0];
 
   return bestMatch.score > 0 ? bestMatch.category : categories[0];
+}
+
+function scoreCategories(ticket: Ticket): CategoryScore[] {
+  const text = normalize(`${ticket.title} ${ticket.description}`);
+
+  return categories.map((category) => {
+    const matchedKeywords = category.keywords.filter((keyword) =>
+      hasKeyword(text, keyword)
+    );
+
+    return {
+      category,
+      matchedKeywords: matchedKeywords.length,
+      score: matchedKeywords.reduce(
+        (total, keyword) => total + keywordWeight(keyword),
+        0
+      ),
+      specificity: CATEGORY_SPECIFICITY[category.id] ?? 0
+    };
+  });
 }
 
 function findBestArticle(category: Category): KnowledgeBaseArticle {
@@ -69,12 +128,20 @@ function findBestArticle(category: Category): KnowledgeBaseArticle {
 }
 
 function calculateConfidence(ticket: Ticket, category: Category): number {
-  const text = normalize(`${ticket.title} ${ticket.description}`);
-  const matchedKeywords = category.keywords.filter((keyword) =>
-    text.includes(normalize(keyword))
-  ).length;
+  const categoryScore = scoreCategories(ticket).find(
+    (candidate) => candidate.category.id === category.id
+  );
 
-  return Math.min(94, FALLBACK_CONFIDENCE + matchedKeywords * 8);
+  if (!categoryScore || categoryScore.score === 0) {
+    return FALLBACK_CONFIDENCE;
+  }
+
+  return Math.min(
+    94,
+    FALLBACK_CONFIDENCE +
+      categoryScore.matchedKeywords * 4 +
+      Math.round(categoryScore.score * 1.5)
+  );
 }
 
 function summarizeTicket(ticket: Ticket, category: Category): string {
@@ -99,4 +166,12 @@ function buildEscalationSummary(
 
 function normalize(value: string): string {
   return value.toLowerCase().replace(/[^a-z0-9 ]/g, " ");
+}
+
+function hasKeyword(text: string, keyword: string): boolean {
+  return text.includes(normalize(keyword));
+}
+
+function keywordWeight(keyword: string): number {
+  return KEYWORD_WEIGHTS[normalize(keyword)] ?? 5;
 }
