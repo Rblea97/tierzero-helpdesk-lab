@@ -26,6 +26,7 @@ The public demo is designed to run as a static web app with fictional sample dat
 - Work tickets through queue states such as New, In Progress, Pending User, Escalated, and Closed
 - Collect required Tier 1 facts for scope, exact error, business impact, verification, and attempted fixes
 - Track interactive checklist progress for each ticket instead of static recommendations
+- Scenario-specific Tier 1 guidance for M365 authentication, VPN access, printing, phishing reports, and onboarding requests
 - Use AI-assist panels for next question, KB match, response draft, escalation summary, and safety flags
 - User, department, and device context linked to each ticket
 - Require realistic documentation before user responses, escalations, and ticket closure

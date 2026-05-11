@@ -35,6 +35,15 @@ TierZero is a safe IT help desk operations lab. It shows how a Tier 1 technician
 8. Refresh the page to confirm the demo state persists.
 9. Confirm the status badge, metrics, handoff or closure details, and audit timeline changed.
 
+## Scenario-Specific Triage Path
+
+1. Use **Reset Demo** to start from the seed queue.
+2. Create a ticket titled `VPN will not connect before shift handoff`.
+3. Use this description: `The VPN client fails with an authentication error. The user can sign in to Microsoft 365, but cannot reach the shared drive needed for a 2 PM finance deadline.`
+4. Confirm TierZero classifies it as **VPN / Remote Access**, not generic Microsoft 365 authentication.
+5. Fill the required facts, start work, review the VPN KB recommendation, send the drafted response, and refresh to show browser-local persistence.
+6. Reset the demo before ending the presentation.
+
 ## Hiring Manager Talking Points
 
 - The demo models realistic help desk discipline: documentation, escalation, asset context, and safe approval.
