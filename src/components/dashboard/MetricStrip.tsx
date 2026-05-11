@@ -1,9 +1,63 @@
-import { metrics } from "../../data/viewData";
+import {
+  AlertTriangle,
+  CheckCircle2,
+  Clock3,
+  ShieldCheck,
+  Ticket
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { QueueMetrics } from "../../domain/types";
 
-export function MetricStrip() {
+interface MetricCard {
+  delta: string;
+  icon: LucideIcon;
+  label: string;
+  tone: "good" | "neutral" | "warn";
+  value: string;
+}
+
+export function MetricStrip({ metrics }: { metrics: QueueMetrics }) {
+  const metricCards: MetricCard[] = [
+    {
+      label: "Open Tickets",
+      value: metrics.openTickets.toString(),
+      delta: "Active queue",
+      icon: Ticket,
+      tone: "neutral"
+    },
+    {
+      label: "High Priority",
+      value: metrics.highPriority.toString(),
+      delta: "Needs attention",
+      icon: AlertTriangle,
+      tone: metrics.highPriority > 0 ? "warn" : "good"
+    },
+    {
+      label: "Pending User",
+      value: metrics.pendingUser.toString(),
+      delta: "Waiting on requester",
+      icon: Clock3,
+      tone: "neutral"
+    },
+    {
+      label: "Escalated",
+      value: metrics.escalated.toString(),
+      delta: "Tier 2 handoff",
+      icon: ShieldCheck,
+      tone: metrics.escalated > 0 ? "warn" : "good"
+    },
+    {
+      label: "Closed",
+      value: metrics.closed.toString(),
+      delta: "Resolved in demo",
+      icon: CheckCircle2,
+      tone: "good"
+    }
+  ];
+
   return (
-    <section className="grid grid-cols-2 gap-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm xl:grid-cols-6">
-      {metrics.map((metric, index) => (
+    <section className="grid grid-cols-2 gap-0 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm xl:grid-cols-5">
+      {metricCards.map((metric, index) => (
         <div
           className={`flex min-h-24 items-center gap-3 p-4 ${
             index > 0 ? "border-slate-200" : ""
