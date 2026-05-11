@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { sampleTickets } from "../data/mockData";
-import { applyTechnicianAction } from "./actions";
+import { applyTechnicianAction, validateTechnicianAction } from "./actions";
 
 const timestamp = "2026-05-11T16:30:00.000Z";
 
@@ -71,5 +71,35 @@ describe("technician actions", () => {
     expect(escalated.auditEvent.eventType).toBe("ticket_escalated");
     expect(closed.ticket.status).toBe("closed");
     expect(closed.auditEvent.eventType).toBe("ticket_closed");
+  });
+
+  it("requires realistic documentation before response, escalation, and closure actions", () => {
+    expect(
+      validateTechnicianAction({
+        type: "send_response",
+        actorName: "Avery Stone",
+        timestamp
+      })
+    ).toEqual({
+      valid: false,
+      message: "Add the user-facing response before sending."
+    });
+    expect(
+      validateTechnicianAction({
+        type: "escalate",
+        actorName: "Avery Stone",
+        timestamp,
+        note: "Repeated lockout after identity verification."
+      })
+    ).toEqual({ valid: true });
+    expect(
+      validateTechnicianAction({
+        type: "close_ticket",
+        actorName: "Avery Stone",
+        timestamp,
+        note: "Cleared cached credentials and confirmed Outlook sign-in.",
+        resolutionCategory: "resolved"
+      })
+    ).toEqual({ valid: true });
   });
 });

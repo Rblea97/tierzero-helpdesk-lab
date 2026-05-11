@@ -6,6 +6,46 @@ export interface TechnicianActionResult {
   auditEvent: AuditEvent;
 }
 
+export type TechnicianActionValidation =
+  | { valid: true }
+  | { valid: false; message: string };
+
+export function validateTechnicianAction(
+  action: TechnicianAction
+): TechnicianActionValidation {
+  if (action.type === "send_response" && !hasText(action.note)) {
+    return {
+      valid: false,
+      message: "Add the user-facing response before sending."
+    };
+  }
+
+  if (action.type === "escalate" && !hasText(action.note)) {
+    return {
+      valid: false,
+      message: "Add an escalation reason before handing off."
+    };
+  }
+
+  if (action.type === "close_ticket") {
+    if (!hasText(action.note)) {
+      return {
+        valid: false,
+        message: "Add resolution notes before closing."
+      };
+    }
+
+    if (!action.resolutionCategory) {
+      return {
+        valid: false,
+        message: "Choose a resolution category before closing."
+      };
+    }
+  }
+
+  return { valid: true };
+}
+
 export function applyTechnicianAction(
   ticket: Ticket,
   action: TechnicianAction
@@ -120,4 +160,8 @@ function getAuditMessage(
   }
 
   return `Status changed to ${titleCase(nextStatus)}.`;
+}
+
+function hasText(value: string | undefined): boolean {
+  return Boolean(value?.trim());
 }
