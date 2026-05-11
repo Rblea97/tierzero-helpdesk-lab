@@ -5,11 +5,12 @@ import {
   Laptop,
   LockKeyhole
 } from "lucide-react";
-import { assets, knowledgeBaseArticles, users } from "../../data/mockData";
+import { assets, users } from "../../data/mockData";
 import type { AuditEvent, GuidedTriageState, Recommendation, Ticket } from "../../domain/types";
 import type { NoteTab } from "../../domain/workflow";
 import { formatTime, titleCase } from "../../lib/format";
 import { Detail, Panel, TabButton } from "../ui/Panel";
+import { getScenarioGuidance } from "./scenarioGuidance";
 
 export function PrimaryWorkbenchPanels({
   recommendation,
@@ -23,9 +24,7 @@ export function PrimaryWorkbenchPanels({
       <IssuePanel ticket={ticket} />
       <SummaryPanel recommendation={recommendation} />
       <ContextPanel ticket={ticket} />
-      <KnowledgePanel
-        recommendationId={recommendation.recommendedKbArticleIds[0]}
-      />
+      <KnowledgePanel recommendation={recommendation} />
     </div>
   );
 }
@@ -180,27 +179,17 @@ function ContextPanel({ ticket }: { ticket: Ticket }) {
   );
 }
 
-function KnowledgePanel({ recommendationId }: { recommendationId: string }) {
-  const primary = knowledgeBaseArticles.find(
-    (article) => article.id === recommendationId
+function KnowledgePanel({ recommendation }: { recommendation: Recommendation }) {
+  const options = getScenarioGuidance(
+    recommendation.categoryId
+  ).knowledgeOptions.map((option, index) =>
+    index === 0
+      ? {
+          ...option,
+          id: recommendation.recommendedKbArticleIds[0] ?? option.id
+        }
+      : option
   );
-  const options = [
-    {
-      id: primary?.id ?? "kb-m365-mfa-signin",
-      title: primary?.title ?? "",
-      score: 92
-    },
-    {
-      id: "kb-m365-cached-creds",
-      title: "Clear WAM credentials in Windows 11",
-      score: 87
-    },
-    {
-      id: "kb-outlook-password-loop",
-      title: "Outlook keeps prompting for password",
-      score: 74
-    }
-  ];
 
   return (
     <Panel title="Knowledge Base Recommendations">
@@ -232,15 +221,13 @@ function KnowledgePanel({ recommendationId }: { recommendationId: string }) {
 }
 
 function ResponsePanel({ recommendation }: { recommendation: Recommendation }) {
+  const guidance = getScenarioGuidance(recommendation.categoryId);
+
   return (
     <Panel title="Drafted Response (Customer)">
       <div className="min-h-52 rounded-md border border-slate-300 bg-white p-4 text-sm leading-6 text-slate-700">
         <p>{recommendation.userResponseDraft}</p>
-        <p className="mt-4">
-          Please do not share your password in this ticket. If a password reset
-          is needed, I will verify your identity first and submit it for
-          technician approval.
-        </p>
+        <p className="mt-4">{guidance.responseSafetyText}</p>
         <p className="mt-4">Thanks,</p>
         <p>Tier 1 Support</p>
       </div>
