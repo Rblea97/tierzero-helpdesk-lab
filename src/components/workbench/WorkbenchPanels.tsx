@@ -357,6 +357,8 @@ function AuditTimeline({ timeline }: { timeline: AuditEvent[] }) {
 }
 
 function issueTags(ticket: Ticket): string[] {
+  const text = `${ticket.title} ${ticket.description}`.toLowerCase();
+
   if (ticket.id === "TZ-INC-2026-0043") {
     return ["Printer offline", "Shared device", "Queue issue"];
   }
@@ -365,10 +367,20 @@ function issueTags(ticket: Ticket): string[] {
     return ["Suspicious email", "Payroll link", "Security review"];
   }
 
+  if (
+    text.includes("vpn") ||
+    text.includes("remote") ||
+    text.includes("tunnel")
+  ) {
+    return ["VPN connection", "Remote access", "Tunnel failure"];
+  }
+
   return ["MFA looping", "Password rejected", "Outlook Desktop"];
 }
 
 function businessImpact(ticket: Ticket): string {
+  const text = `${ticket.title} ${ticket.description}`.toLowerCase();
+
   if (ticket.id === "TZ-INC-2026-0043") {
     return "Department printing delayed";
   }
@@ -377,10 +389,23 @@ function businessImpact(ticket: Ticket): string {
     return "Potential credential risk";
   }
 
+  if (text.includes("vpn") || text.includes("remote")) {
+    return "Remote access blocked";
+  }
+
   return "Cannot access email";
 }
 
 function triageFindings(recommendation: Recommendation): string[] {
+  if (recommendation.categoryId === "cat-vpn") {
+    return [
+      "Remote access failure reported by requester.",
+      "VPN tunnel or network path should be checked.",
+      "Account and VPN group membership need review.",
+      "Escalate if multiple users report gateway failure."
+    ];
+  }
+
   if (recommendation.categoryId === "cat-security-phishing") {
     return [
       "Suspicious payroll link reported by user.",
