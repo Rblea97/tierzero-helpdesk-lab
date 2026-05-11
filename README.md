@@ -1,6 +1,6 @@
 # TierZero: AI-Assisted IT Help Desk Operations Lab
 
-TierZero is a realistic help desk operations lab that shows how Tier 1 support teams can triage tickets, connect user and device context, recommend knowledge-base steps, draft responses, and escalate safely with human approval.
+TierZero is a realistic AI-assisted help desk operations lab that shows how Tier 1 support teams can intake tickets, collect required troubleshooting facts, follow knowledge-base checklists, draft user responses, escalate safely, close with documentation, and preserve an audit trail.
 
 ## Live Demo
 
@@ -24,10 +24,13 @@ The public demo is designed to run as a static web app with fictional sample dat
 
 - Create fictional support tickets through an interactive intake form
 - Work tickets through queue states such as New, In Progress, Pending User, Escalated, and Closed
+- Collect required Tier 1 facts for scope, exact error, business impact, verification, and attempted fixes
+- Track interactive checklist progress for each ticket instead of static recommendations
+- Use AI-assist panels for next question, KB match, response draft, escalation summary, and safety flags
 - User, department, and device context linked to each ticket
-- Knowledge-base recommendations and Tier 1 troubleshooting checklists
-- Human approval before sensitive or automated actions
-- Capture technician notes, approvals, escalations, and closure events in the audit timeline
+- Require realistic documentation before user responses, escalations, and ticket closure
+- Persist live-demo work in the browser with a Reset Demo control
+- Capture technician notes, approvals, escalations, responses, closure events, and workflow events in the audit timeline
 
 ## Quick Start
 
@@ -54,7 +57,7 @@ pnpm preview
 
 ## Demo Workflow
 
-The demo lets a reviewer create a fictional ticket, select it from the queue, run deterministic triage, save an internal note, send a safe user response, escalate or close the ticket, and review the audit timeline.
+The demo lets a reviewer create a fictional ticket, select it from the queue, run guided triage, collect required facts, complete checklist work, save an internal note, send a safe user response, escalate or close the ticket with documentation, refresh the page to confirm browser persistence, and review the audit timeline.
 
 The default workflow starts with a sample ticket such as:
 
@@ -66,10 +69,12 @@ TierZero then shows:
 - Linked fictional user, department, and asset record
 - Interactive ticket queue and status filters
 - Recommended knowledge-base article
-- Tier 1 troubleshooting checklist
+- Interactive Tier 1 troubleshooting checklist
+- Required fact collection for ticketing discipline
 - User-facing response draft
 - Saved internal technician notes
 - Tier 2 escalation summary
+- n8n-style automation blueprint for the planned homelab proof layer
 - Human approval gate
 - Audit timeline with technician actions
 
@@ -92,6 +97,7 @@ TierZero is designed to show safe IT operations:
 | Make the demo feel like real IT work without exposing real systems | Split the project into a static public demo and a later private homelab proof layer |
 | Show AI assistance without implying unsafe automation | Use deterministic recommendations, explicit safety notes, approval gates, and audit events |
 | Keep the project manageable for an entry-level portfolio | Build GLPI, n8n, and Ollama as future adapter targets instead of MVP dependencies |
+| Prove ticketing discipline during a live demo | Require facts, checklist progress, escalation reasons, response history, and closure notes before key actions |
 
 ## Project Timeline
 
@@ -99,7 +105,7 @@ TierZero is organized as a phased portfolio build:
 
 1. **Architecture and safety model:** define the public demo, private homelab boundary, data model, and approval-first operating model.
 2. **Demo foundation:** build the React/Vite app, mock ITSM data, triage logic, and operations-console layout.
-3. **Workflow credibility:** add scenario switching, user and asset context, KB recommendations, audit events, and approval states.
+3. **Workflow credibility:** add scenario switching, user and asset context, KB recommendations, guided triage, audit events, approval states, and browser persistence.
 4. **Portfolio presentation:** add README polish, deployment workflow, public runbooks, demo script, screenshot, and regression tests.
 5. **Future homelab proof:** connect GLPI and n8n locally behind adapters after the public demo is live.
 

@@ -1,13 +1,12 @@
 import {
   AlertTriangle,
-  Check,
   CheckCircle2,
   ChevronDown,
   Laptop,
   LockKeyhole
 } from "lucide-react";
 import { assets, knowledgeBaseArticles, users } from "../../data/mockData";
-import type { AuditEvent, Recommendation, Ticket } from "../../domain/types";
+import type { AuditEvent, GuidedTriageState, Recommendation, Ticket } from "../../domain/types";
 import type { NoteTab } from "../../domain/workflow";
 import { formatTime, titleCase } from "../../lib/format";
 import { Detail, Panel, TabButton } from "../ui/Panel";
@@ -36,16 +35,18 @@ export function SecondaryWorkbenchPanels({
   onTabChange,
   recommendation,
   savedNotes,
+  triageState,
   timeline
 }: {
   activeTab: NoteTab;
   onTabChange: (tab: NoteTab) => void;
   recommendation: Recommendation;
   savedNotes: string[];
+  triageState: GuidedTriageState;
   timeline: AuditEvent[];
 }) {
   return (
-    <div className="grid gap-3 xl:grid-cols-[1fr_1.05fr_0.6fr]">
+    <div className="grid gap-3 xl:grid-cols-[1fr_1.05fr_0.7fr]">
       <ResponsePanel recommendation={recommendation} />
       <NotesPanel
         activeTab={activeTab}
@@ -53,11 +54,9 @@ export function SecondaryWorkbenchPanels({
         internalNotes={recommendation.internalTechnicianNotes}
         onTabChange={onTabChange}
         savedNotes={savedNotes}
+        triageState={triageState}
       />
-      <div className="flex flex-col gap-3">
-        <ChecklistPanel steps={recommendation.tierOneChecklist} />
-        <AuditTimeline timeline={timeline} />
-      </div>
+      <AuditTimeline timeline={timeline} />
     </div>
   );
 }
@@ -264,13 +263,15 @@ function NotesPanel({
   escalationSummary,
   internalNotes,
   onTabChange,
-  savedNotes
+  savedNotes,
+  triageState
 }: {
   activeTab: NoteTab;
   escalationSummary: string;
   internalNotes: string;
   onTabChange: (tab: NoteTab) => void;
   savedNotes: string[];
+  triageState: GuidedTriageState;
 }) {
   const hasSavedNotes = savedNotes.length > 0;
 
@@ -312,42 +313,30 @@ function NotesPanel({
       <p className="mt-4 text-xs text-slate-500">
         {hasSavedNotes ? `${savedNotes.length} saved note(s)` : "No saved notes"}
       </p>
-    </Panel>
-  );
-}
-
-function ChecklistPanel({ steps }: { steps: string[] }) {
-  return (
-    <Panel
-      action={
-        <span className="text-sm font-semibold text-slate-700">
-          {Math.max(steps.length - 1, 0)} / {steps.length}
-        </span>
-      }
-      title="Tier 1 Checklist"
-    >
-      <div className="space-y-3">
-        {steps.map((step, index) => (
-          <label className="flex items-start gap-3 text-sm" key={step}>
-            <span
-              className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border ${
-                index < steps.length - 1
-                  ? "border-cyan-600 bg-cyan-600 text-white"
-                  : "border-slate-300 bg-white text-transparent"
-              }`}
-            >
-              <Check size={14} />
-            </span>
-            <span
-              className={
-                index < steps.length - 1 ? "text-slate-700" : "text-slate-500"
-              }
-            >
-              {step}
-            </span>
-          </label>
-        ))}
-      </div>
+      {triageState.handoff ? (
+        <div className="mt-4 rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-950">
+          <p className="font-semibold">Latest escalation package</p>
+          <p className="mt-2 leading-6">{triageState.handoff.summary}</p>
+        </div>
+      ) : null}
+      {triageState.responseHistory.length > 0 ? (
+        <div className="mt-4 rounded-md border border-cyan-200 bg-cyan-50 p-3 text-sm text-cyan-950">
+          <p className="font-semibold">Sent response history</p>
+          <p className="mt-2 leading-6">
+            {
+              triageState.responseHistory[
+                triageState.responseHistory.length - 1
+              ]?.message
+            }
+          </p>
+        </div>
+      ) : null}
+      {triageState.resolution ? (
+        <div className="mt-4 rounded-md border border-emerald-300 bg-emerald-50 p-3 text-sm text-emerald-950">
+          <p className="font-semibold">Closure documentation</p>
+          <p className="mt-2 leading-6">{triageState.resolution.notes}</p>
+        </div>
+      ) : null}
     </Panel>
   );
 }

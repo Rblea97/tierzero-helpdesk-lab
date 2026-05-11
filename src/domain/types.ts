@@ -91,8 +91,51 @@ export type TechnicianActionType =
 export interface TechnicianAction {
   type: TechnicianActionType;
   note?: string;
+  resolutionCategory?: "resolved" | "duplicate" | "user_confirmed" | "no_fault_found";
   actorName: string;
   timestamp: string;
+}
+
+export type TriageFactKey =
+  | "scope"
+  | "errorMessage"
+  | "businessImpact"
+  | "verificationStatus"
+  | "attemptedFixes";
+
+export interface TriageFact {
+  key: TriageFactKey;
+  label: string;
+  prompt: string;
+  value: string;
+  required: boolean;
+}
+
+export interface ResponseHistoryEntry {
+  message: string;
+  timestamp: string;
+}
+
+export interface EscalationHandoff {
+  reason: string;
+  escalationGroup: string;
+  summary: string;
+  timestamp: string;
+}
+
+export interface ResolutionDetails {
+  category: NonNullable<TechnicianAction["resolutionCategory"]>;
+  notes: string;
+  timestamp: string;
+}
+
+export interface GuidedTriageState {
+  ticketId: string;
+  facts: Record<TriageFactKey, TriageFact>;
+  checklistCompleted: number[];
+  responseHistory: ResponseHistoryEntry[];
+  handoff?: EscalationHandoff;
+  resolution?: ResolutionDetails;
 }
 
 export interface KnowledgeBaseArticle {
