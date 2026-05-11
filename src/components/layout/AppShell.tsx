@@ -63,7 +63,7 @@ function SideNav() {
         </div>
         <div>
           <p className="text-slate-400">ENVIRONMENT</p>
-          <p className="mt-1 text-slate-200">Public Demo v0.1</p>
+          <p className="mt-1 text-slate-200">Functional Demo v0.2</p>
         </div>
       </div>
     </aside>
