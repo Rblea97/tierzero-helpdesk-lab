@@ -8,14 +8,26 @@ TierZero is a safe IT help desk operations lab. It shows how a Tier 1 technician
 
 ## Walkthrough
 
-1. Start on the dashboard and point out the operational metrics: open tickets, approval queue, SLA risk, and escalation rate.
-2. Select the Microsoft 365 MFA scenario.
-3. Show the generated ticket category, priority, confidence score, linked user, linked department, and assigned laptop.
-4. Open the recommended knowledge-base article summary and explain that the public demo uses deterministic mock output for safety.
-5. Review the Tier 1 checklist and call out the identity verification and escalation criteria.
-6. Show the drafted user response, internal technician notes, and Tier 2 escalation summary.
-7. Use the approval gate to approve or reject the recommendation.
-8. Show the audit timeline updating with the technician decision.
+1. Start on the dashboard and point out the operational metrics: open tickets, high priority, pending user, escalated, and closed.
+2. Create a fictional VPN or printer ticket from Ticket Intake.
+3. Select the new ticket in Ticket Queue and show that the workbench updates to that ticket.
+4. Show the generated ticket category, priority, confidence score, linked user, linked department, and assigned asset.
+5. Open the recommended knowledge-base article summary and explain that the public demo uses deterministic mock output for safety.
+6. Click Start Work and point out the status change and audit event.
+7. Save an internal note documenting the first Tier 1 check.
+8. Click Send Response or Escalate depending on the scenario.
+9. Use the approval gate to approve or reject the recommendation if the scenario requires it.
+10. Confirm the status badge, metrics, saved note, and audit timeline changed.
+
+## Functional Demo Path
+
+1. Open the live demo.
+2. Create a fictional VPN or printer ticket from Ticket Intake.
+3. Select the new ticket in Ticket Queue.
+4. Click Start Work.
+5. Save an internal note documenting the first Tier 1 check.
+6. Send Response or Escalate depending on the scenario.
+7. Confirm the status badge, metrics, and audit timeline changed.
 
 ## Hiring Manager Talking Points
 

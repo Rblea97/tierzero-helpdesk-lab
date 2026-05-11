@@ -14,7 +14,7 @@ import {
   Users
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import type { Ticket as SupportTicket } from "../domain/types";
+import type { QueueFilter, Ticket as SupportTicket } from "../domain/types";
 
 export interface NavItem {
   active?: boolean;
@@ -87,6 +87,15 @@ export const metrics: Metric[] = [
     icon: ShieldCheck,
     tone: "good"
   }
+];
+
+export const queueFilters: { id: QueueFilter; label: string }[] = [
+  { id: "all", label: "All" },
+  { id: "new", label: "New" },
+  { id: "in_progress", label: "In Progress" },
+  { id: "pending_user", label: "Pending User" },
+  { id: "escalated", label: "Escalated" },
+  { id: "closed", label: "Closed" }
 ];
 
 export const scenarioDescriptions: Record<string, string> = {

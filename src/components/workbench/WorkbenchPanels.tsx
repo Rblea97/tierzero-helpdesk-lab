@@ -35,11 +35,13 @@ export function SecondaryWorkbenchPanels({
   activeTab,
   onTabChange,
   recommendation,
+  savedNotes,
   timeline
 }: {
   activeTab: NoteTab;
   onTabChange: (tab: NoteTab) => void;
   recommendation: Recommendation;
+  savedNotes: string[];
   timeline: AuditEvent[];
 }) {
   return (
@@ -50,6 +52,7 @@ export function SecondaryWorkbenchPanels({
         escalationSummary={recommendation.escalationSummary}
         internalNotes={recommendation.internalTechnicianNotes}
         onTabChange={onTabChange}
+        savedNotes={savedNotes}
       />
       <div className="flex flex-col gap-3">
         <ChecklistPanel steps={recommendation.tierOneChecklist} />
@@ -260,13 +263,17 @@ function NotesPanel({
   activeTab,
   escalationSummary,
   internalNotes,
-  onTabChange
+  onTabChange,
+  savedNotes
 }: {
   activeTab: NoteTab;
   escalationSummary: string;
   internalNotes: string;
   onTabChange: (tab: NoteTab) => void;
+  savedNotes: string[];
 }) {
+  const hasSavedNotes = savedNotes.length > 0;
+
   return (
     <Panel title="Technician Workspace">
       <div className="flex border-b border-slate-200">
@@ -282,15 +289,29 @@ function NotesPanel({
         />
       </div>
       <div className="mt-4 min-h-28 rounded-md border border-slate-300 bg-slate-50 p-4 text-sm leading-6 text-slate-700">
-        {activeTab === "notes" ? internalNotes : escalationSummary}
+        {activeTab === "notes" ? (
+          <div className="space-y-3">
+            {hasSavedNotes ? (
+              <div className="space-y-2">
+                {savedNotes.map((note, index) => (
+                  <p
+                    className="rounded-md border border-slate-200 bg-white p-3"
+                    key={`${note}-${index}`}
+                  >
+                    {note}
+                  </p>
+                ))}
+              </div>
+            ) : null}
+            <p>{internalNotes}</p>
+          </div>
+        ) : (
+          escalationSummary
+        )}
       </div>
-      <p className="mt-4 text-xs text-slate-500">Last saved: 02:12 PM</p>
-      <button
-        className="mt-3 h-10 rounded-md border border-cyan-600 px-4 text-sm font-semibold text-cyan-700 hover:bg-cyan-50"
-        type="button"
-      >
-        Save Notes
-      </button>
+      <p className="mt-4 text-xs text-slate-500">
+        {hasSavedNotes ? `${savedNotes.length} saved note(s)` : "No saved notes"}
+      </p>
     </Panel>
   );
 }
@@ -357,6 +378,8 @@ function AuditTimeline({ timeline }: { timeline: AuditEvent[] }) {
 }
 
 function issueTags(ticket: Ticket): string[] {
+  const text = `${ticket.title} ${ticket.description}`.toLowerCase();
+
   if (ticket.id === "TZ-INC-2026-0043") {
     return ["Printer offline", "Shared device", "Queue issue"];
   }
@@ -365,10 +388,20 @@ function issueTags(ticket: Ticket): string[] {
     return ["Suspicious email", "Payroll link", "Security review"];
   }
 
+  if (
+    text.includes("vpn") ||
+    text.includes("remote") ||
+    text.includes("tunnel")
+  ) {
+    return ["VPN connection", "Remote access", "Tunnel failure"];
+  }
+
   return ["MFA looping", "Password rejected", "Outlook Desktop"];
 }
 
 function businessImpact(ticket: Ticket): string {
+  const text = `${ticket.title} ${ticket.description}`.toLowerCase();
+
   if (ticket.id === "TZ-INC-2026-0043") {
     return "Department printing delayed";
   }
@@ -377,10 +410,23 @@ function businessImpact(ticket: Ticket): string {
     return "Potential credential risk";
   }
 
+  if (text.includes("vpn") || text.includes("remote")) {
+    return "Remote access blocked";
+  }
+
   return "Cannot access email";
 }
 
 function triageFindings(recommendation: Recommendation): string[] {
+  if (recommendation.categoryId === "cat-vpn") {
+    return [
+      "Remote access failure reported by requester.",
+      "VPN tunnel or network path should be checked.",
+      "Account and VPN group membership need review.",
+      "Escalate if multiple users report gateway failure."
+    ];
+  }
+
   if (recommendation.categoryId === "cat-security-phishing") {
     return [
       "Suspicious payroll link reported by user.",

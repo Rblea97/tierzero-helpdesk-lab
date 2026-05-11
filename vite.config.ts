@@ -9,5 +9,5 @@ const base =
 
 export default defineConfig({
   base,
-  plugins: [react(), tailwindcss()],
+  plugins: [tailwindcss(), react()],
 });

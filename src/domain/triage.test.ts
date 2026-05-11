@@ -37,6 +37,24 @@ describe("triageTicket", () => {
     );
   });
 
+  it("matches VPN reports to the remote access knowledge base", () => {
+    const recommendation = triageTicket({
+      ...sampleTickets[0],
+      id: "TZ-INC-2026-0098",
+      title: "VPN cannot connect from home",
+      description:
+        "The VPN client says the tunnel could not be established from home Wi-Fi."
+    });
+
+    expect(recommendation.categoryName).toBe("VPN / Remote Access");
+    expect(recommendation.recommendedKbArticleIds).toEqual([
+      "kb-vpn-remote-access"
+    ]);
+    expect(recommendation.tierOneChecklist).toContain(
+      "Confirm whether the user has working internet access outside the VPN."
+    );
+  });
+
   it("personalizes the user response when the requester is known", () => {
     const recommendation = triageTicket(sampleTickets[0]);
 

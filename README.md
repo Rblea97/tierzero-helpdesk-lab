@@ -22,12 +22,12 @@ The public demo is designed to run as a static web app with fictional sample dat
 
 ## Key Features
 
-- Intake and triage for realistic IT support tickets
+- Create fictional support tickets through an interactive intake form
+- Work tickets through queue states such as New, In Progress, Pending User, Escalated, and Closed
 - User, department, and device context linked to each ticket
 - Knowledge-base recommendations and Tier 1 troubleshooting checklists
 - Human approval before sensitive or automated actions
-- Internal notes, user-facing response drafts, and escalation summaries
-- Audit timeline for ticket events, recommendations, approvals, and escalations
+- Capture technician notes, approvals, escalations, and closure events in the audit timeline
 
 ## Quick Start
 
@@ -54,7 +54,9 @@ pnpm preview
 
 ## Demo Workflow
 
-The main workflow starts with a sample ticket such as:
+The demo lets a reviewer create a fictional ticket, select it from the queue, run deterministic triage, save an internal note, send a safe user response, escalate or close the ticket, and review the audit timeline.
+
+The default workflow starts with a sample ticket such as:
 
 > "My Outlook keeps asking for MFA and then says my password is incorrect."
 
@@ -62,13 +64,14 @@ TierZero then shows:
 
 - Category, priority, and confidence output
 - Linked fictional user, department, and asset record
+- Interactive ticket queue and status filters
 - Recommended knowledge-base article
 - Tier 1 troubleshooting checklist
 - User-facing response draft
-- Internal technician notes
+- Saved internal technician notes
 - Tier 2 escalation summary
 - Human approval gate
-- Audit timeline
+- Audit timeline with technician actions
 
 ## Safety Model
 

@@ -202,6 +202,37 @@ export const knowledgeBaseArticles: KnowledgeBaseArticle[] = [
     safetyNotes: ["Do not remove shared printer configuration without approval."]
   },
   {
+    id: "kb-vpn-remote-access",
+    title: "VPN remote access Tier 1 checklist",
+    categoryId: "cat-vpn",
+    symptoms: [
+      "VPN client cannot establish a tunnel.",
+      "User reports remote access failing from home or public Wi-Fi.",
+      "Connection may fail before MFA or after credential submission."
+    ],
+    tierOneSteps: [
+      "Confirm whether the user has working internet access outside the VPN.",
+      "Ask the user to capture the exact VPN error message.",
+      "Confirm the user's account is active and assigned to the VPN group.",
+      "Ask the user to retry from a known trusted network if available.",
+      "Escalate if multiple users report the same gateway or tunnel failure."
+    ],
+    userResponseTemplate:
+      "Hi Jordan, I can help with the VPN connection issue. Please confirm whether your internet works before connecting to VPN and share the exact error shown by the VPN client.",
+    internalNotesTemplate:
+      "Remote access report. Confirm internet access, VPN group membership, MFA state, client error, and whether other users are affected before escalating.",
+    escalationCriteria: [
+      "Multiple users affected",
+      "VPN gateway unavailable",
+      "User blocked from urgent business access",
+      "Account or group membership requires admin review"
+    ],
+    safetyNotes: [
+      "Do not ask the user to share their password.",
+      "Do not bypass MFA or conditional access controls."
+    ]
+  },
+  {
     id: "kb-phishing-report",
     title: "Phishing report handling",
     categoryId: "cat-security-phishing",

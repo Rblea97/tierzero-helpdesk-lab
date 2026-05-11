@@ -25,6 +25,10 @@ Ticket Intake
 
 The demo intentionally avoids live backend dependencies. This makes it safe to host publicly on GitHub Pages, Cloudflare Pages, Netlify, or Vercel.
 
+## Queue Workflow Boundary
+
+The public demo keeps queue behavior in local domain modules for ticket creation, queue metrics, and technician actions. This keeps React components focused on rendering while preserving a future path to map the same concepts to GLPI tickets, GLPI assets, and n8n workflow events in a private homelab layer.
+
 ## Homelab Proof Layer
 
 The homelab layer is planned after the public demo is working.
